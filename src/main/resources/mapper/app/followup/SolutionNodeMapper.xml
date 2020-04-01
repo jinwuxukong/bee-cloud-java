@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hutu.modules.app.followup.mapper.SolutionNodeMapper">
+
+	<select id="getList" resultType="com.hutu.modules.common.entity.SolutionNode">
+		SELECT
+			id
+			,solutionId
+			,name
+			,intervalValue
+			,unit
+			,unitShow
+			,intervalDay
+			,orders
+			,isDeleted
+		FROM
+		t_followup_solution_node
+		WHERE isDeleted = 0
+			<if test="date.id!=null">
+				and id = #{date.id}
+			</if>
+			<if test="date.solutionId!=null">
+				and solutionId = #{date.solutionId}
+			</if>
+			<if test="date.name!=null and date.name!=''">
+				and name like CONCAT('%',#{date.name},'%')
+			</if>
+			<if test="date.intervalValue!=null">
+				and intervalValue = #{date.intervalValue}
+			</if>
+			<if test="date.unit!=null">
+				and unit = #{date.unit}
+			</if>
+			<if test="date.unitShow!=null and date.unitShow!=''">
+				and unitShow like CONCAT('%',#{date.unitShow},'%')
+			</if>
+			<if test="date.intervalDay!=null">
+				and intervalDay = #{date.intervalDay}
+			</if>
+			<if test="date.orders!=null">
+				and orders = #{date.orders}
+			</if>
+			<if test="date.isDeleted!=null">
+				and isDeleted = #{date.isDeleted}
+			</if>
+	</select>
+</mapper>

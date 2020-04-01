@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hutu.modules.admin.followup.mapper.AdminTemplateMapper">
+
+	<select id="getPage" resultType="com.hutu.modules.common.entity.Template">
+		SELECT
+		tft.*
+		FROM
+		t_form_template tft
+		<where> not exists (
+			select 1 from t_form_template as tft2
+			where tft2.templateNumber=tft.templateNumber and tft.version &lt; tft2.version )
+			<if test="params.name!=null and params.name!=''">
+				and tft.name like CONCAT('%',#{params.name},'%') or tft.createName like CONCAT('%',#{params.name},'%')
+			</if>
+			<if test="params.templateNumber!=null and params.templateNumber!=''">
+				and tft.templateNumber like CONCAT('%',#{params.templateNumber},'%')
+			</if>
+			<if test="params.type!=null">
+				and tft.type = #{params.type}
+			</if>
+			<if test="params.status!=null">
+				and tft.status = #{params.status}
+			</if>
+			<if test="params.verifyStatus!=null">
+				and tft.verifyStatus = #{params.verifyStatus}
+			</if>
+			<if test="params.formType!=null">
+				and tft.formType = #{params.formType}
+			</if>
+			<if test="params.scope!=null">
+				and tft.scope = #{params.scope}
+			</if>
+			ORDER BY tft.createTime desc
+		</where>
+	</select>
+
+	<select id="getVersionList" resultType="com.hutu.modules.common.entity.Template">
+		SELECT
+			tft.id,
+			tft.templateNumber,
+			tft.NAME,
+			tft.formType,
+			tft.formTypeShow,
+			tft.createName,
+			tft.STATUS,
+			tft.verifyStatus,
+			tft.version,
+			tft.createTime,
+			tft.isScore,
+			tft.analysisResult
+		FROM
+			t_form_template tft
+		where tft.isDeleted = 0
+		<if test="id!=null">
+			and tft.id != #{id}
+		</if>
+		<if test="templateNumber!=null">
+			and tft.templateNumber = #{templateNumber}
+		</if>
+	</select>
+
+	<select id="getList" resultType="com.hutu.modules.common.entity.Template">
+		SELECT
+			id
+			,`name`
+			,templateNumber
+			,`type`
+			,typeShow
+			,formType
+			,formTypeShow
+			,operationName
+			,`desc`
+			,startWord
+			,endWord
+			,status
+			,htmlContent
+			,autherId
+			,autherName
+			,currentOwnerId
+			,currentOwnerName
+			,verifyId
+			,verifyName
+			,verifyTime
+			,verifyStatus
+			,scope
+			,scopeShow
+			,isScore
+			,analysisResult
+			,version
+			,createName
+			,createId
+			,createTime
+			,updateName
+			,updateId
+			,updateTime
+			,isDeleted
+		FROM
+		t_form_template
+		WHERE isDeleted = 0
+			<if test="date.id!=null">
+				and id = #{date.id}
+			</if>
+			<if test="date.name!=null and date.name!=''">
+				and name like CONCAT('%',#{date.name},'%')
+			</if>
+			<if test="date.templateNumber!=null and date.templateNumber!=''">
+				and templateNumber like CONCAT('%',#{date.templateNumber},'%')
+			</if>
+			<if test="date.type!=null">
+				and type = #{date.type}
+			</if>
+			<if test="date.typeShow!=null and date.typeShow!=''">
+				and typeShow like CONCAT('%',#{date.typeShow},'%')
+			</if>
+			<if test="date.formType!=null">
+				and formType = #{date.formType}
+			</if>
+			<if test="date.formTypeShow!=null and date.formTypeShow!=''">
+				and formTypeShow like CONCAT('%',#{date.formTypeShow},'%')
+			</if>
+			<if test="date.operationName!=null and date.operationName!=''">
+				and operationName like CONCAT('%',#{date.operationName},'%')
+			</if>
+			<if test="date.desc!=null and date.desc!=''">
+				and desc like CONCAT('%',#{date.desc},'%')
+			</if>
+			<if test="date.startWord!=null and date.startWord!=''">
+				and startWord like CONCAT('%',#{date.startWord},'%')
+			</if>
+			<if test="date.endWord!=null and date.endWord!=''">
+				and endWord like CONCAT('%',#{date.endWord},'%')
+			</if>
+			<if test="date.status!=null">
+				and status = #{date.status}
+			</if>
+			<if test="date.htmlContent!=null and date.htmlContent!=''">
+				and htmlContent like CONCAT('%',#{date.htmlContent},'%')
+			</if>
+			<if test="date.autherId!=null">
+				and autherId = #{date.autherId}
+			</if>
+			<if test="date.autherName!=null and date.autherName!=''">
+				and autherName like CONCAT('%',#{date.autherName},'%')
+			</if>
+			<if test="date.currentOwnerId!=null">
+				and currentOwnerId = #{date.currentOwnerId}
+			</if>
+			<if test="date.currentOwnerName!=null and date.currentOwnerName!=''">
+				and currentOwnerName like CONCAT('%',#{date.currentOwnerName},'%')
+			</if>
+			<if test="date.verifyId!=null">
+				and verifyId = #{date.verifyId}
+			</if>
+			<if test="date.verifyName!=null and date.verifyName!=''">
+				and verifyName like CONCAT('%',#{date.verifyName},'%')
+			</if>
+			<if test="date.verifyStatus!=null">
+				and verifyStatus = #{date.verifyStatus}
+			</if>
+			<if test="date.scope!=null">
+				and scope = #{date.scope}
+			</if>
+			<if test="date.scopeShow!=null and date.scopeShow!=''">
+				and scopeShow like CONCAT('%',#{date.scopeShow},'%')
+			</if>
+			<if test="date.isScore!=null">
+				and isScore = #{date.isScore}
+			</if>
+			<if test="date.analysisResult!=null and date.analysisResult!=''">
+				and analysisResult like CONCAT('%',#{date.analysisResult},'%')
+			</if>
+			<if test="date.version!=null">
+				and version = #{date.version}
+			</if>
+			<if test="date.createName!=null and date.createName!=''">
+				and createName like CONCAT('%',#{date.createName},'%')
+			</if>
+			<if test="date.createId!=null">
+				and createId = #{date.createId}
+			</if>
+			<if test="date.updateName!=null and date.updateName!=''">
+				and updateName like CONCAT('%',#{date.updateName},'%')
+			</if>
+			<if test="date.updateId!=null">
+				and updateId = #{date.updateId}
+			</if>
+			<if test="date.isDeleted!=null">
+				and isDeleted = #{date.isDeleted}
+			</if>
+	</select>
+	<select id="getVersion" resultType="java.lang.Float">
+		SELECT
+            count(*)
+        FROM
+            `t_form_template`
+        WHERE
+            isDeleted = 0
+        AND templateNumber = #{templateNumber}
+	</select>
+</mapper>

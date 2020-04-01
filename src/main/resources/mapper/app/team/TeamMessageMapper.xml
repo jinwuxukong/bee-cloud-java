@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hutu.modules.app.team.mapper.TeamMessageMapper">
+
+	<select id="getList" resultType="com.hutu.modules.common.entity.TeamMessage">
+		SELECT
+			id
+			,parameterType
+			,teamId
+			,toUserId
+			,title
+			,content
+			,subtitle
+			,statusNum
+			,createId
+			,createName
+			,createTime
+			,isDeleted
+		FROM
+		t_followup_team_message
+		WHERE isDeleted = 0
+			<if test="date.id!=null">
+				and id = #{date.id}
+			</if>
+			<if test="date.parameterType!=null">
+				and parameterType = #{date.parameterType}
+			</if>
+			<if test="date.teamId!=null">
+				and teamId = #{date.teamId}
+			</if>
+			<if test="date.toUserId!=null">
+				and toUserId = #{date.toUserId}
+			</if>
+			<if test="date.title!=null and date.title!=''">
+				and title like CONCAT('%',#{date.title},'%')
+			</if>
+			<if test="date.content!=null and date.content!=''">
+				and content like CONCAT('%',#{date.content},'%')
+			</if>
+			<if test="date.subtitle!=null and date.subtitle!=''">
+				and subtitle like CONCAT('%',#{date.subtitle},'%')
+			</if>
+			<if test="date.statusNum!=null">
+				and statusNum = #{date.statusNum}
+			</if>
+			<if test="date.createId!=null">
+				and createId = #{date.createId}
+			</if>
+			<if test="date.createName!=null and date.createName!=''">
+				and createName like CONCAT('%',#{date.createName},'%')
+			</if>
+			<if test="date.isDeleted!=null">
+				and isDeleted = #{date.isDeleted}
+			</if>
+	</select>
+	
+    <select id="isMessage" resultType="java.lang.Integer">
+		select sum(statusNum) from t_followup_team_message
+		<where>
+			<if test="params.teamId!=null">
+				teamId = #{params.teamId}
+			</if>
+			<if test="params.parameterType!=null">
+				and parameterType in
+				<foreach collection="params.parameterType" separator="," open="(" close=")" item="item" index="index">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+	</select>
+</mapper>

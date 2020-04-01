@@ -1,0 +1,73 @@
+# Tomcat
+server:
+  tomcat:
+    uri-encoding: UTF-8
+    max-threads: 1000
+    min-spare-threads: 30
+  port: 8080
+  connection-timeout: 5000ms
+#https:
+#  port: 8443
+#  ssl:
+#    key-store: classpath:sample.jks
+#    key-store-password: secret
+#    key-password: password
+#spring
+spring:
+  # 环境 dev|test|pro
+  profiles:
+    active: dev
+  application:
+    name: bee-cloud-java
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 1000MB
+#mybatisPlus
+mybatis-plus:
+  mapper-locations: classpath:mapper/**/*.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: com.hutu.modules
+  global-config:
+    banner: false
+    db-config:
+      #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
+      id-type: AUTO
+      #序列接口实现类配置
+      #key-generator: com.baomidou.springboot.xxx
+      #逻辑删除配置
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+      #自定义填充策略接口实现
+      #meta-object-handler: com.baomidou.springboot.xxx
+  configuration:
+    map-underscore-to-camel-case: false
+    cache-enabled: false
+    call-setters-on-nulls: true
+wx:
+  mp:
+    configs:
+      - appId: wx5ac26ebb340a4c71
+        secret: 9a7b4720b4f9a096e910b13d2d6febe8
+        token: alin
+        aesKey: hPyptb7WZimdSX7CP0tq4vHC2DHWVUYxIsZ4WmFGWJj
+#七牛的配置
+qiniu:
+  accessKey: CSg507MMASZcYuaMRYeXRbzP2ul4gRf1FDdlonSG
+  secretKey: -aTihPYt65sDaIy9mfd9E22dnDo3qTIQ-J-2CVRT
+  bucketName: bee-cloud
+  fileDomain: public #文件访问域名前缀
+aliyun:
+  oss:
+    #    endpoint: oss-cn-shanghai-internal.aliyuncs.com # oss对外服务的访问域名
+    endpoint: oss-cn-hangzhou.aliyuncs.com
+    accessKeyId: LTAI2cJHSqKU6rR7 # 访问身份验证中用到用户标识
+    accessKeySecret: 6Un9lsoupJuwE61QqrlOGVdB9iUROV # 用户用于加密签名字符串和oss用来验证签名字符串的密钥
+    #    bucketName: bmy-dictionaries-private # oss的存储空间
+    bucketName: bee-pulice # oss的存储空间
+    policy:
+      expire: 300 # 签名有效期(S)
+    maxSize: 30 # 上传文件大小(M)
+    callback: http://api.hnasa.cn/oss/callback # 文件上传成功后的回调地址
+    dir:
+      prefix: bee/images/ # 上传文件夹路径前缀

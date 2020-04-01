@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hutu.modules.app.followup.mapper.PatientMapper">
+
+    <select id="statisticsPatient" resultType="com.hutu.modules.app.center.entity.StatisticsPatientVo">
+        SELECT
+        DATE_FORMAT(createTime, '%Y-%m-%d') days,
+        count(
+        DATE_FORMAT(createTime, '%Y-%m-%d')
+        ) count
+        FROM
+        `t_followup_team_patient`
+        WHERE
+        isDeleted = 0 and doctorUserId = #{userId} and
+        date_sub(curdate(), INTERVAL #{dayNum} DAY) &lt;= date(createTime)
+        GROUP BY
+        days;
+    </select>
+
+    <select id="pagePatient" resultType="com.hutu.modules.app.followup.entity.PatientVo">
+        SELECT
+        fpa.*,
+        ftp.isBinding,
+        ftp.isPlan,
+        (select fp.`name` from t_followup_plan fp where fp.isDeleted=0 and fp.patientId = fpa.id ORDER BY fp.createTime desc limit 1) planName,
+        ft.id TeamId,
+        ft.`name` TeamName
+        FROM
+        `t_followup_team_patient` ftp
+        LEFT JOIN t_followup_patient fpa ON ftp.patientId = fpa.id
+        LEFT JOIN t_followup_team ft ON ftp.teamId = ft.id
+        WHERE
+        ftp.isDeleted=0 and fpa.isDeleted=0
+        and fpa.phone &lt;&gt; ""
+        <if test="params.userId!=null">
+            and ftp.doctorUserId = #{params.userId}
+        </if>
+        <if test="params.name!=null and params.name!=''">
+            and fpa.name like CONCAT('%',#{params.name},'%')
+        </if>
+        <if test="params.label!=null and params.label!=''">
+            and fpa.label like CONCAT('%',#{params.label},'%')
+        </if>
+        <if test="params.isPlan!=null and params.isPlan!=''">
+            and ftp.isPlan = #{params.isPlan}
+        </if>
+        <if test="params.bindStatus!=null">
+            and ftp.isBinding = #{params.bindStatus}
+        </if>
+        <if test="params.TeamId!=null">
+            and ftp.teamId = #{params.TeamId}
+        </if>
+        ORDER BY fpa.createTime desc
+    </select>
+
+    <select id="read" resultType="com.hutu.modules.app.followup.entity.PatientVo">
+        SELECT
+            fp.id id,
+            fp.`name` name,
+            fp.sex sex,
+            fp.sexShow sexShow,
+            fp.avatar avatar,
+            fp.birthday birthday,
+            fp.height height,
+            fp.weight weight,
+            fp.phone phone,
+            fp.marryStatus marryStatus,
+            fp.idCard idCard,
+            fp.label label,
+            fp.medicalUrl medicalUrl,
+            fp.openId openId,
+            fp.healthCareCardNumber healthCareCardNumber,
+            fp.medicalCardNumber medicalCardNumber,
+            fp.isAttention isAttention,
+            fp.createId createId,
+            fp.createName createName,
+            fp.createTime createTime,
+            fp.updateId updateId,
+            fp.updateName updateName,
+            fp.updateTime updateTime,
+            fp.isDeleted isDeleted,
+            ftp.isBinding isBinding,
+            ftp.isPlan,
+            ftp.doctorUserId doctorUserId,
+            ftp.doctorName doctorName,
+            ftp.id teamPatientId
+        FROM
+            `t_followup_team_patient` ftp
+        RIGHT JOIN t_followup_patient fp ON ftp.patientId = fp.id
+        WHERE
+            ftp.isDeleted = 0
+        AND fp.isDeleted = 0
+        <if test="id!=null and id!=''">
+            and ftp.patientId = #{id}
+        </if>
+        <if test="userId!=null and userId!=''">
+            and ftp.doctorUserId = #{userId};
+        </if>
+    </select>
+
+    <select id="getList" resultType="com.hutu.modules.common.entity.Patient">
+        SELECT
+        id
+        ,name
+        ,sex
+        ,sexShow
+        ,birthday
+        ,height
+        ,weight
+        ,phone
+        ,marryStatus
+        ,idCard
+        ,label
+        ,medicalUrl
+        ,openId
+        ,healthCareCardNumber
+        ,medicalCardNumber
+        ,isAttention
+        ,createId
+        ,createName
+        ,createTime
+        ,updateId
+        ,updateName
+        ,updateTime
+        ,isDeleted
+        FROM
+        t_followup_patient
+        WHERE isDeleted = 0
+        <if test="date.id!=null">
+            and id = #{date.id}
+        </if>
+        <if test="date.name!=null and date.name!=''">
+            and name like CONCAT('%',#{date.name},'%')
+        </if>
+        <if test="date.sex!=null">
+            and sex = #{date.sex}
+        </if>
+        <if test="date.sexShow!=null and date.sexShow!=''">
+            and sexShow like CONCAT('%',#{date.sexShow},'%')
+        </if>
+        <if test="date.height!=null">
+            and height = #{date.height}
+        </if>
+        <if test="date.weight!=null">
+            and weight = #{date.weight}
+        </if>
+        <if test="date.phone!=null and date.phone!=''">
+            and phone like CONCAT('%',#{date.phone},'%')
+        </if>
+        <if test="date.marryStatus!=null">
+            and marryStatus = #{date.marryStatus}
+        </if>
+        <if test="date.idCard!=null and date.idCard!=''">
+            and idCard like CONCAT('%',#{date.idCard},'%')
+        </if>
+        <if test="date.label!=null and date.label!=''">
+            and label like CONCAT('%',#{date.label},'%')
+        </if>
+        <if test="date.medicalUrl!=null and date.medicalUrl!=''">
+            and medicalUrl like CONCAT('%',#{date.medicalUrl},'%')
+        </if>
+        <if test="date.openId!=null and date.openId!=''">
+            and openId like CONCAT('%',#{date.openId},'%')
+        </if>
+        <if test="date.healthCareCardNumber!=null and date.healthCareCardNumber!=''">
+            and healthCareCardNumber like CONCAT('%',#{date.healthCareCardNumber},'%')
+        </if>
+        <if test="date.medicalCardNumber!=null and date.medicalCardNumber!=''">
+            and medicalCardNumber like CONCAT('%',#{date.medicalCardNumber},'%')
+        </if>
+        <if test="date.isAttention!=null">
+            and isAttention = #{date.isAttention}
+        </if>
+        <if test="date.createId!=null">
+            and createId = #{date.createId}
+        </if>
+        <if test="date.createName!=null and date.createName!=''">
+            and createName like CONCAT('%',#{date.createName},'%')
+        </if>
+        <if test="date.updateId!=null">
+            and updateId = #{date.updateId}
+        </if>
+        <if test="date.updateName!=null and date.updateName!=''">
+            and updateName like CONCAT('%',#{date.updateName},'%')
+        </if>
+        <if test="date.isDeleted!=null">
+            and isDeleted = #{date.isDeleted}
+        </if>
+    </select>
+</mapper>

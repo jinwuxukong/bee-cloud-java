@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hutu.modules.app.center.mapper.AppDoctorMapper">
+
+    <select id="WxRead" resultType="com.hutu.modules.app.followup.entity.PatientVo">
+        SELECT
+            ftp.*,
+            fp.*
+        FROM
+            `t_followup_team_patient` ftp
+        LEFT JOIN t_followup_patient fp ON ftp.patientId = fp.id
+        LEFT JOIN t_upms_user uu ON ftp.doctorUserId = uu.id
+        LEFT JOIN t_followup_doctor fd ON uu.id = fd.userId
+        WHERE
+        ftp.isDeleted = 0 and fp.isDeleted = 0 and uu.isDeleted = 0 and
+        fp.openId = #{openId};
+    </select>
+
+    <select id="getPage" resultType="com.hutu.modules.app.team.entity.TeamMemberVo">
+        SELECT
+            uu.id,
+            uu.avatar,
+            ftm.`name`,
+            ftm.jobType
+        FROM
+            `t_followup_team_member` ftm
+        LEFT JOIN t_upms_user uu ON ftm.userId = uu.id
+        WHERE
+            ftm.isDeleted = 0
+        AND uu.isDeleted = 0
+        <if test="params.teamId!=null and params.teamId!=''">
+            AND	ftm.teamId = #{params.teamId}
+        </if>
+    </select>
+</mapper>

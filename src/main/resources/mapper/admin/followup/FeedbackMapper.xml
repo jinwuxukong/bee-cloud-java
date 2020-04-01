@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hutu.modules.admin.followup.mapper.FeedbackMapper">
+
+	<select id="getList" resultType="com.hutu.modules.common.entity.Feedback">
+		SELECT
+			id
+			,avatar
+			,source
+			,sourceId
+			,sourceName
+			,content
+			,accessoryUrl
+			,status
+			,createId
+			,createName
+			,createTime
+			,updateId
+			,updateName
+			,updateTime
+			,isDeleted
+		FROM
+		t_followup_feedback
+		WHERE isDeleted = 0
+			<if test="date.id!=null">
+				and id = #{date.id}
+			</if>
+			<if test="date.avatar!=null and date.avatar!=''">
+				and avatar like CONCAT('%',#{date.avatar},'%')
+			</if>
+			<if test="date.source!=null">
+				and source = #{date.source}
+			</if>
+			<if test="date.sourceId!=null">
+				and sourceId = #{date.sourceId}
+			</if>
+			<if test="date.sourceName!=null and date.sourceName!=''">
+				and sourceName like CONCAT('%',#{date.sourceName},'%')
+			</if>
+			<if test="date.content!=null and date.content!=''">
+				and content like CONCAT('%',#{date.content},'%')
+			</if>
+			<if test="date.accessoryUrl!=null and date.accessoryUrl!=''">
+				and accessoryUrl like CONCAT('%',#{date.accessoryUrl},'%')
+			</if>
+			<if test="date.status!=null">
+				and status = #{date.status}
+			</if>
+			<if test="date.createId!=null">
+				and createId = #{date.createId}
+			</if>
+			<if test="date.createName!=null and date.createName!=''">
+				and createName like CONCAT('%',#{date.createName},'%')
+			</if>
+			<if test="date.updateId!=null">
+				and updateId = #{date.updateId}
+			</if>
+			<if test="date.updateName!=null and date.updateName!=''">
+				and updateName like CONCAT('%',#{date.updateName},'%')
+			</if>
+			<if test="date.isDeleted!=null">
+				and isDeleted = #{date.isDeleted}
+			</if>
+	</select>
+
+	<select id="getFeedbackYear" resultType="java.lang.Integer">
+		select count(*) from `t_followup_feedback` where YEAR(createTime)=YEAR(NOW());
+	</select>
+
+	<select id="getPage" resultType="com.hutu.modules.common.entity.Feedback">
+		select * from `t_followup_feedback` where
+		isDeleted = 0
+		<if test="params.status!=null">
+			and status = #{params.status}
+		</if>
+		<if test="params.sourceName!=null and params.sourceName!=''">
+			and sourceName like CONCAT('%',#{params.sourceName},'%')
+		</if>
+		<if test="params.content!=null and params.content!=''">
+			or content like CONCAT('%',#{params.content},'%')
+		</if>
+	</select>
+</mapper>

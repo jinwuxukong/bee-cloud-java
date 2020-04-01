@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hutu.modules.app.team.mapper.TeamMessageItemMapper">
+
+	<select id="getList" resultType="com.hutu.modules.common.entity.TeamMessageItem">
+		SELECT
+			id
+			,messageId
+			,itemType
+			,status
+			,parameterType
+			,parameter
+			,title
+			,avatar
+			,content
+			,isRead
+			,toUserId
+			,createId
+			,createName
+			,createTime
+			,isDeleted
+		FROM
+		t_followup_team_message_item
+		WHERE isDeleted = 0
+			<if test="date.id!=null">
+				and id = #{date.id}
+			</if>
+			<if test="date.messageId!=null">
+				and messageId = #{date.messageId}
+			</if>
+			<if test="date.itemType!=null">
+				and itemType = #{date.itemType}
+			</if>
+			<if test="date.status!=null">
+				and status = #{date.status}
+			</if>
+			<if test="date.parameterType!=null">
+				and parameterType = #{date.parameterType}
+			</if>
+			<if test="date.parameter!=null and date.parameter!=''">
+				and parameter like CONCAT('%',#{date.parameter},'%')
+			</if>
+			<if test="date.title!=null and date.title!=''">
+				and title like CONCAT('%',#{date.title},'%')
+			</if>
+			<if test="date.avatar!=null and date.avatar!=''">
+				and avatar like CONCAT('%',#{date.avatar},'%')
+			</if>
+			<if test="date.content!=null and date.content!=''">
+				and content like CONCAT('%',#{date.content},'%')
+			</if>
+			<if test="date.isRead!=null">
+				and isRead = #{date.isRead}
+			</if>
+			<if test="date.toUserId!=null">
+				and toUserId = #{date.toUserId}
+			</if>
+			<if test="date.createId!=null">
+				and createId = #{date.createId}
+			</if>
+			<if test="date.createName!=null and date.createName!=''">
+				and createName like CONCAT('%',#{date.createName},'%')
+			</if>
+			<if test="date.isDeleted!=null">
+				and isDeleted = #{date.isDeleted}
+			</if>
+	</select>
+</mapper>

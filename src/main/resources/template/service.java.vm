@@ -1,0 +1,18 @@
+package ${package.Service};
+
+import com.hutu.modules.common.entity.${entity};
+import ${superServiceClassPackage};
+
+import java.util.List;
+/**
+ * <p>
+ * $!{table.comment} 服务类
+ * </p>
+ *
+ * @author ${author}
+ * @since ${date}
+ */
+public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
+
+    List<${entity}> getList(${entity} date);
+}

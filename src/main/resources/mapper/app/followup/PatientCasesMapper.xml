@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hutu.modules.app.followup.mapper.PatientCasesMapper">
+
+	<select id="getList" resultType="com.hutu.modules.common.entity.PatientCases">
+		SELECT
+			id
+			,patientId
+			,visitTime
+			,visitType
+			,hospitalName
+			,departmentName
+			,admissionNumber
+			,visitCard
+			,operationName
+			,diseaseIcd10
+			,operationDate
+			,remark
+			,accessoryUrl
+			,createId
+			,createName
+			,createTime
+			,updateId
+			,updateName
+			,updateTime
+			,isDeleted
+		FROM
+		t_followup_patient_cases
+		WHERE isDeleted = 0
+			<if test="date.id!=null">
+				and id = #{date.id}
+			</if>
+			<if test="date.patientId!=null">
+				and patientId = #{date.patientId}
+			</if>
+			<if test="date.visitType!=null">
+				and visitType = #{date.visitType}
+			</if>
+			<if test="date.hospitalName!=null and date.hospitalName!=''">
+				and hospitalName like CONCAT('%',#{date.hospitalName},'%')
+			</if>
+			<if test="date.departmentName!=null and date.departmentName!=''">
+				and departmentName like CONCAT('%',#{date.departmentName},'%')
+			</if>
+			<if test="date.admissionNumber!=null">
+				and admissionNumber = #{date.admissionNumber}
+			</if>
+			<if test="date.visitCard!=null and date.visitCard!=''">
+				and visitCard like CONCAT('%',#{date.visitCard},'%')
+			</if>
+			<if test="date.operationName!=null and date.operationName!=''">
+				and operationName like CONCAT('%',#{date.operationName},'%')
+			</if>
+			<if test="date.diseaseIcd10!=null and date.diseaseIcd10!=''">
+				and diseaseIcd10 like CONCAT('%',#{date.diseaseIcd10},'%')
+			</if>
+			<if test="date.remark!=null and date.remark!=''">
+				and remark like CONCAT('%',#{date.remark},'%')
+			</if>
+			<if test="date.accessoryUrl!=null and date.accessoryUrl!=''">
+				and accessoryUrl like CONCAT('%',#{date.accessoryUrl},'%')
+			</if>
+			<if test="date.createId!=null">
+				and createId = #{date.createId}
+			</if>
+			<if test="date.createName!=null and date.createName!=''">
+				and createName like CONCAT('%',#{date.createName},'%')
+			</if>
+			<if test="date.updateId!=null">
+				and updateId = #{date.updateId}
+			</if>
+			<if test="date.updateName!=null and date.updateName!=''">
+				and updateName like CONCAT('%',#{date.updateName},'%')
+			</if>
+			<if test="date.isDeleted!=null">
+				and isDeleted = #{date.isDeleted}
+			</if>
+	</select>
+
+	<select id="getPage" resultType="com.hutu.modules.common.entity.PatientCases">
+		SELECT
+			fpc.*
+		FROM
+			t_followup_patient_cases fpc
+		where fpc.isDeleted = 0
+		<if test="params.patientId!=null and params.patientId!=''">
+			and fpc.patientId = #{params.patientId}
+		</if>
+		<if test="params.departmentName!=null and params.departmentName!=''">
+			and fpc.departmentName like CONCAT('%',#{params.departmentName},'%')
+		</if>
+		<if test="params.visitTimeStart!=null and params.visitTimeStart!=''">
+			and fpc.visitTime &gt;= #{params.visitTimeStart}
+		</if>
+		<if test="params.visitTimeEnd!=null and params.visitTimeEnd!=''">
+			and fpc.visitTime &lt;= #{params.visitTimeEnd}
+		</if>
+		order by fpc.updateTime desc
+	</select>
+</mapper>

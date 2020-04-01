@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hutu.modules.rest.mapper.JeewxMapper">
+    <select id="getDoctorInfo" resultType="com.hutu.modules.rest.vo.DoctorInfo">
+        SELECT
+        a.id,
+        a.nick name,
+        b.doctorHospital hospitalName
+        FROM
+        t_upms_user a LEFT JOIN t_followup_doctor b ON a.id = b.userId
+        WHERE
+        a.id = #{id}
+    </select>
+</mapper>

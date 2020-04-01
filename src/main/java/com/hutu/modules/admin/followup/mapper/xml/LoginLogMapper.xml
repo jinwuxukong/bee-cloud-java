@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hutu.modules.admin.followup.mapper.AdminLoginLogMapper">
+
+	<select id="getList" resultType="com.hutu.modules.common.entity.LoginLog">
+		SELECT
+			landingLocation
+			,ipAddress
+			,landingTime
+			,type
+			,loginTime
+		FROM
+		t_followup_login_log
+		WHERE isDeleted = 0
+			<if test="date.landingLocation!=null and date.landingLocation!=''">
+				and landingLocation like CONCAT('%',#{date.landingLocation},'%')
+			</if>
+			<if test="date.ipAddress!=null and date.ipAddress!=''">
+				and ipAddress like CONCAT('%',#{date.ipAddress},'%')
+			</if>
+			<if test="date.type!=null">
+				and type = #{date.type}
+			</if>
+	</select>
+</mapper>

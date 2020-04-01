@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hutu.modules.app.followup.mapper.AppPlanNodeItemMapper">
+
+    <select id="countByStatus" resultType="java.lang.Integer">
+    SELECT
+	  COUNT(*)
+    FROM
+        t_followup_plan_node_item
+    WHERE
+        isDeleted = 0
+    AND createId = #{userId}
+    AND STATUS = #{status}
+    AND createTime LIKE CONCAT('%',#{createTime},'%')
+    </select>
+
+    <select id="getList" resultType="com.hutu.modules.app.followup.entity.PlanNodeItemVo">
+    SELECT
+        fpni.*,
+        ft.type type,
+        ft.name templateName,
+        ft.id templateId
+    FROM
+        `t_followup_plan_node_item` fpni
+    LEFT JOIN t_form_template ft ON fpni.templateId = ft.id
+    where
+    fpni.isDeleted = 0 and ft.isDeleted = 0
+    <if test="date.id!=null and date.id!=''">
+        and fpni.id = #{date.id}
+    </if>
+    <if test="date.nodeId!=null and date.nodeId!=''">
+        and fpni.nodeId = #{date.nodeId}
+    </if>
+    </select>
+
+    <select id="getOneByid" resultType="com.hutu.modules.app.followup.entity.PlanNodeItemVo">
+        SELECT
+		fpni.id id,
+		fpni.nodeId nodeId,
+		fpni.`status` status,
+		fpni.`name` name,
+		fpni.doctorId doctorId,
+		(select nick from t_upms_user where isDeleted = 0 and id=fpni.doctorId LIMIT 1) doctorName,
+		(select `name` from t_followup_team where isDeleted = 0 and id=fpni.teamId LIMIT 1) teamName,
+		fpni.teamId teamId,
+		fpni.scaleType scaleType,
+		fpni.scaleTypeShow scaleTypeShow,
+		fpni.patientId patientId,
+		fpni.patientName patientName,
+		fpni.patientPhoto patientPhoto,
+		fpni.phone phone,
+		fpni.informState informState,
+		fpni.informStateShow informStateShow,
+		fpni.templateId templateId,
+		fpni.answer answer,
+		fpni.isSendWeChat,
+		fpni.isWeChatRead,
+		fpni.createId createId,
+		fpni.createName createName,
+		fpni.createTime createTime,
+		fpni.updateId updateId,
+		fpni.updateName updateName,
+		fpni.updateTime updateTime,
+		fpni.isDeleted isDeleted,
+		ft.`name` templateName,
+		ft.type type,
+		ft.typeShow typeShow,
+		ft.formType formType,
+		ft.formTypeShow formTypeShow,
+		ft.htmlContent htmlContent,
+		ft.autherId autherId,
+		ft.autherName autherName,
+		ft.currentOwnerId currentOwnerId,
+		ft.currentOwnerName currentOwnerName,
+		ft.verifyId verifyId,
+		ft.verifyName verifyName,
+		ft.verifyTime verifyTime,
+		ft.verifyStatus verifyStatus,
+		ft.scope scope,
+		ft.scopeShow scopeShow,
+		ft.isScore isScore,
+		ft.analysisResult analysisResult
+        FROM
+        `t_followup_plan_node_item` fpni
+        LEFT JOIN t_form_template ft ON fpni.templateId = ft.id
+        where
+        fpni.isDeleted = 0 and ft.isDeleted = 0
+        <if test="date.id!=null and date.id!=''">
+            and fpni.id = #{date.id}
+        </if>
+        <if test="date.nodeId!=null and date.nodeId!=''">
+            and fpni.nodeId = #{date.nodeId}
+        </if>
+    </select>
+
+    <select id="noFinishList" resultType="com.hutu.modules.app.center.entity.ScaleTypeVo">
+		SELECT
+			fpni.id id,
+			ft.`name` name,
+			fp.id patientId,
+			fp.name patientName,
+			fpni.createTime createTime,
+			TIMESTAMPDIFF(YEAR,DATE_FORMAT(fp.birthday,'%Y-%m-%d'), CURDATE()) as age,
+			fp.sexShow sex,
+			ft.formType formType,
+			ft.formTypeShow formTypeShow,
+			fp.avatar patientPhoto,
+			fpni.scaleTypeShow scaleTypeShow,
+			fp.phone phone,
+			fpni.isSendWeChat isSendWeChat,
+			tft.id teamId,
+			tft.name teamName
+		FROM
+			`t_followup_plan_node_item` fpni
+		LEFT JOIN t_followup_patient fp ON fpni.patientId = fp.id
+		LEFT JOIN t_form_template ft ON fpni.templateId = ft.id
+		LEFT JOIN t_followup_team tft ON fpni.teamId = tft.id
+		WHERE
+		fpni.isDeleted = 0 and fp.isDeleted = 0 and ft.isDeleted = 0 and tft.isDeleted = 0
+		and ft.type = 1
+		and fpni.`status` = 0
+		<if test="params.userId!=null">
+			and fpni.doctorId = #{params.userId}
+		</if>
+	</select>
+    <select id="FinishPage" resultType="com.hutu.modules.app.center.entity.ScaleTypeVo">
+		SELECT
+			fpni.id id,
+			ft.`name` name,
+			fp.id patientId,
+			fp.name patientName,
+			fpni.createTime createTime,
+			TIMESTAMPDIFF(YEAR,DATE_FORMAT(fp.birthday,'%Y-%m-%d'), CURDATE()) as age,
+			fp.sexShow sex,
+			ft.formType formType,
+			ft.formTypeShow formTypeShow,
+			fp.avatar patientPhoto,
+			fpni.scaleTypeShow scaleTypeShow,
+			fp.phone phone,
+			tft.id teamId,
+			tft.name teamName
+		FROM
+			`t_followup_plan_node_item` fpni
+		LEFT JOIN t_followup_patient fp ON fpni.patientId = fp.id
+		LEFT JOIN t_form_template ft ON fpni.templateId = ft.id
+		LEFT JOIN t_followup_team tft ON fpni.teamId = tft.id
+		WHERE
+		fpni.isDeleted = 0 and fp.isDeleted = 0 and ft.isDeleted = 0 and tft.isDeleted = 0
+		and ft.type = 1
+		and fpni.`status` = 1
+		<if test="params.userId!=null">
+			and fpni.doctorId = #{params.userId}
+		</if>
+	</select>
+    <select id="overTimePage" resultType="com.hutu.modules.app.center.entity.ScaleTypeVo">
+		SELECT
+			fpni.id id,
+			ft.`name` name,
+			fp.id patientId,
+			fp.name patientName,
+			fpni.createTime createTime,
+			TIMESTAMPDIFF(YEAR,DATE_FORMAT(fp.birthday,'%Y-%m-%d'), CURDATE()) as age,
+			fp.sexShow sex,
+			ft.formType formType,
+			ft.formTypeShow formTypeShow,
+			fp.avatar patientPhoto,
+			fpni.scaleTypeShow scaleTypeShow,
+			fp.phone phone,
+			fpni.informState informState,
+			tft.id teamId,
+			tft.name teamName
+		FROM
+			`t_followup_plan_node_item` fpni
+		LEFT JOIN t_followup_patient fp ON fpni.patientId = fp.id
+		LEFT JOIN t_form_template ft ON fpni.templateId = ft.id
+		LEFT JOIN t_followup_team tft ON fpni.teamId = tft.id
+		WHERE
+		fpni.isDeleted = 0 and fp.isDeleted = 0 and ft.isDeleted = 0 and tft.isDeleted = 0
+		and ft.type = 1
+		and fpni.`status` = 2
+		<if test="params.userId!=null">
+			and fpni.doctorId = #{params.userId}
+		</if>
+	</select>
+
+	<select id="statisticsScale" resultType="com.hutu.modules.app.center.entity.StatisticsScaleVo">
+		SELECT
+		(
+		SELECT
+		count(*)
+		FROM
+		t_followup_plan_node_item fpni
+		LEFT JOIN t_form_template ft on fpni.templateId = ft.id
+		WHERE
+		fpni.isDeleted = 0
+		AND ft.isDeleted = 0
+		AND ft.type = 1
+		AND fpni.`status` = 0
+		AND fpni.doctorId = fpni2.doctorId
+		) NoFinish,
+		(
+		SELECT
+		count(*)
+		FROM
+		t_followup_plan_node_item fpni
+		LEFT JOIN t_form_template ft on fpni.templateId = ft.id
+		WHERE
+		fpni.isDeleted = 0
+		AND ft.isDeleted = 0
+		AND ft.type = 1
+		AND fpni.`status` = 1
+		AND fpni.doctorId = fpni2.doctorId
+		) Finish,
+		(
+		SELECT
+		count(*)
+		FROM
+		t_followup_plan_node_item fpni
+		LEFT JOIN t_form_template ft on fpni.templateId = ft.id
+		WHERE
+		fpni.isDeleted = 0
+		AND ft.isDeleted = 0
+		AND ft.type = 1
+		AND fpni.`status` = 2
+		AND fpni.doctorId = fpni2.doctorId
+		) overTime
+		FROM
+		`t_followup_plan_node_item` fpni2
+		WHERE
+		fpni2.isDeleted = 0
+		<if test="userId!=null">
+			and fpni2.doctorId = #{userId}
+		</if>
+		limit 1
+	</select>
+
+	<select id="nowStatisticsScale" resultType="com.hutu.modules.app.center.entity.StatisticsScaleVo">
+		SELECT
+		(
+		SELECT
+		count(*)
+		FROM
+		t_followup_plan_node_item fpni
+		LEFT JOIN t_form_template ft on fpni.templateId = ft.id
+		WHERE
+		fpni.isDeleted = 0
+		AND ft.isDeleted = 0
+		AND to_days(fpni.createTime) = to_days(now())
+		AND ft.type = 1
+		AND fpni.`status` = 0
+		AND fpni.doctorId = fpni2.doctorId
+		) NoFinish,
+		(
+		SELECT
+		count(*)
+		FROM
+		t_followup_plan_node_item fpni
+		LEFT JOIN t_form_template ft on fpni.templateId = ft.id
+		WHERE
+		fpni.isDeleted = 0
+		AND ft.isDeleted = 0
+		AND to_days(fpni.createTime) = to_days(now())
+		AND ft.type = 1
+		AND fpni.`status` = 1
+		AND fpni.doctorId = fpni2.doctorId
+		) Finish,
+		(
+		SELECT
+		count(*)
+		FROM
+		t_followup_plan_node_item fpni
+		LEFT JOIN t_form_template ft on fpni.templateId = ft.id
+		WHERE
+		fpni.isDeleted = 0
+		AND ft.isDeleted = 0
+		AND to_days(fpni.createTime) = to_days(now())
+		AND ft.type = 1
+		AND fpni.`status` = 2
+		AND fpni.doctorId = fpni2.doctorId
+		) overTime
+		FROM
+		`t_followup_plan_node_item` fpni2
+		WHERE
+		fpni2.isDeleted = 0
+		<if test="userId!=null">
+			and fpni2.doctorId = #{userId}
+		</if>
+		limit 1
+	</select>
+
+	<select id="getPage" resultType="com.hutu.modules.app.followup.entity.PlanNodeItemVo">
+		SELECT
+		    fpni.id,
+			ft.`name`,
+            ft.type,
+			fpni.createTime,
+			ft.formType,
+			ft.formTypeShow,
+			fpni.isWeChatRead
+		FROM
+			`t_followup_plan_node_item` fpni
+		LEFT JOIN t_form_template ft ON fpni.templateId = ft.id
+		where fpni.isDeleted = 0 and ft.isDeleted = 0
+		<if test="params.patientId!=null and params.patientId!=''">
+			and fpni.patientId = #{params.patientId}
+		</if>
+		<if test="params.doctorId!=null and params.doctorId!=''">
+			and fpni.doctorId = #{params.doctorId}
+		</if>
+		<if test="params.teamId!=null and params.teamId!=''">
+			and fpni.teamId = #{params.teamId}
+		</if>
+		<if test="params.name!=null and params.name!=''">
+			and fpni.name = #{params.name}
+		</if>
+		<if test="params.type!=null and params.type!=''">
+			and ft.type = #{params.type}
+		</if>
+		<if test="params.formType!=null and params.formType!=''">
+			and ft.formType = #{params.formType}
+		</if>
+		<if test="params.scaleType!=null and params.scaleType!=''">
+			and fpni.scaleType = #{params.scaleType}
+		</if>
+		<if test="params.scope!=null and params.scope!=''">
+			and ft.scope = #{params.scope}
+		</if>
+		order by fpni.createTime desc
+	</select>
+</mapper>

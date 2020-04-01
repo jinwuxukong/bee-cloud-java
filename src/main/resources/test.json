@@ -1,0 +1,135 @@
+{
+  "list": [
+    {
+      "type": "input",
+      "name": "姓名",
+      "icon": "icon-input",
+      "options": {
+        "width": "100%",
+        "defaultValue": "",
+        "required": true,
+        "dataType": "string",
+        "pattern": "",
+        "placeholder": "",
+        "disabled": false,
+        "isChoose": 0,
+        "remoteFunc": "func_1562753100035_59983"
+      },
+      "key": "1562753100035_59983",
+      "model": "input_1562753100035_59983",
+      "rules": [
+        {
+          "type": "string",
+          "message": "姓名格式不正确"
+        },
+        {
+          "required": true,
+          "message": "姓名必须填写"
+        }
+      ]
+    },
+    {
+      "type": "radio",
+      "name": "性别",
+      "icon": "icon-radio-active",
+      "options": {
+        "inline": true,
+        "defaultValue": "",
+        "showLabel": true,
+        "options": [
+          {
+            "value": "0",
+            "label": "男"
+          },
+          {
+            "value": "1",
+            "label": "女"
+          },
+          {
+            "value": "2",
+            "label": "其他"
+          }
+        ],
+        "required": false,
+        "width": "",
+        "remote": false,
+        "remoteOptions": [],
+        "props": {
+          "value": "value",
+          "label": "label"
+        },
+        "remoteFunc": "func_1562753115017_87962",
+        "disabled": false,
+        "isChoose": 1
+      },
+      "key": "1562753115017_87962",
+      "model": "radio_1562753115017_87962",
+      "rules": []
+    },
+    {
+      "type": "select",
+      "name": "爱好",
+      "icon": "icon-select",
+      "options": {
+        "defaultValue": "",
+        "multiple": false,
+        "disabled": false,
+        "clearable": false,
+        "placeholder": "",
+        "required": false,
+        "showLabel": true,
+        "width": "",
+        "options": [
+          {
+            "value": "0",
+            "label": "跑步"
+          },
+          {
+            "value": "1",
+            "label": "跳舞"
+          },
+          {
+            "value": "2",
+            "label": "游泳"
+          }
+        ],
+        "remote": false,
+        "filterable": false,
+        "remoteOptions": [],
+        "props": {
+          "value": "value",
+          "label": "label"
+        },
+        "remoteFunc": "func_1562753142994_33661",
+        "isChoose": 1
+      },
+      "key": "1562753142994_33661",
+      "model": "select_1562753142994_33661",
+      "rules": []
+    },
+    {
+      "type": "rate",
+      "name": "评分",
+      "icon": "icon-icon-test",
+      "options": {
+        "defaultValue": 0,
+        "max": 5,
+        "disabled": false,
+        "allowHalf": false,
+        "required": false,
+        "isChoose": 0,
+        "remoteFunc": "func_1562753166902_47573"
+      },
+      "key": "1562753166902_47573",
+      "model": "rate_1562753166902_47573",
+      "rules": []
+    }
+  ],
+  "config": {
+    "labelWidth": 100,
+    "labelPosition": "right",
+    "size": "small",
+    "customClass": ""
+  }
+}
+//[{"name":"01","value":"湖南省人民医院"},{"name":"02","value":"李擎东"},{"name":"03","value":""},{"name":"04","value":"医务部"},{"name":"05","value":"18673106590"},{"name":"06","value":""},{"name":"07","value":"2014-1"},{"name":"08","value":"42"},{"name":"09","value":"2000左右"},{"name":"10","value":"30"},{"name":"11","value":"分散式与集中式相结合"},{"name":"12","value":""},{"name":"hosplevel","value":"三级甲等"},{"name":"02flag","value":"是"},{"name":"03flag","value":"是"},{"name":"dssModel","value":"以上都不是"},{"name":"optCount","value":"10-20例"},{"name":"optRate","value":"1%-5%"}]

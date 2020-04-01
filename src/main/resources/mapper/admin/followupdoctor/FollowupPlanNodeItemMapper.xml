@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hutu.modules.admin.followupdoctor.mapper.DoctorPlanNodeItemMapper">
+
+    <select id="notCompletedPlanNodeItem" resultType="com.hutu.modules.admin.followupdoctor.vo.DoctorFollowupTaskVo">
+        SELECT
+            a.id,
+            a.content,
+            a.name,
+            a.type,
+            a.nodeId,
+            b.name as nodeName,
+            c.name as planName,
+            c.id   as planId,
+            c.patientId,
+            c.patientName
+        from t_followup_plan_node_item a
+                 LEFT JOIN t_followup_plan_node b on a.nodeId = b.id
+                 left join t_followup_plan c on b.followupPlanId = c.id
+        where a.status = 0
+          and to_days(b.executeDate) = to_days(now());
+    </select>
+</mapper>

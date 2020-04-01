@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hutu.modules.admin.followup.mapper.AdminSolutionNodeItemMapper">
+
+    <select id="getOneByDate" resultType="com.hutu.modules.admin.followup.vo.AdminSolutionNodeItemVo">
+        SELECT
+        fsni.id id,
+        fsni.solutionNodeId solutionNodeId,
+        fsni.`name` name,
+        fsni.templateId templateId,
+        fsni.templateName templateName,
+        ft.type templateType,
+        ft.typeShow typeShow,
+        ft.formType formType,
+        ft.formTypeShow formTypeShow,
+        ft.`status` `status`,
+        ft.currentOwnerId currentOwnerId,
+        ft.currentOwnerName currentOwnerName,
+        ft.verifyId verifyId,
+        ft.verifyName verifyName,
+        ft.verifyTime verifyTime,
+        ft.verifyStatus verifyStatus,
+        ft.scope scope,
+        ft.scopeShow scopeShow,
+        ft.templateNumber templateNumber,
+        ft.isScore isScore,
+        ft.analysisResult analysisResult
+        FROM
+        `t_followup_solution_node_item` fsni
+        LEFT JOIN t_form_template ft ON fsni.templateId = ft.id
+        WHERE
+        ft.isDeleted = 0
+        <if test="from.id!=null">
+            and fsni.id = #{from.id}
+        </if>
+        <if test="from.solutionNodeId!=null">
+            and fsni.solutionNodeId = #{from.solutionNodeId}
+        </if>
+        <if test="from.name!=null and from.name!=''">
+            and fsni.name like CONCAT('%',#{from.name},'%')
+        </if>
+        <if test="from.templateId!=null">
+            and fsni.templateId = #{from.templateId}
+        </if>
+        <if test="from.templateName!=null and from.templateName!=''">
+            and fsni.templateName like CONCAT('%',#{from.templateName},'%')
+        </if>
+        <if test="from.templateType!=null">
+            and fsni.templateType = #{from.templateType}
+        </if>
+        <if test="from.ids!=null and from.ids!=''">
+            and fsni.id in
+            <foreach collection="from.ids.split(',')" item="item" index="index" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+</mapper>

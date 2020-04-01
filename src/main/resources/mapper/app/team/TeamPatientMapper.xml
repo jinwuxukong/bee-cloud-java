@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hutu.modules.app.team.mapper.TeamPatientMapper">
+
+    <select id="getPage" resultType="com.hutu.modules.app.team.entity.TeamPatientVo">
+        SELECT
+        ftp.id,
+        ftp.patientId,
+        fp.`name` patientName,
+        fp.sex sex,
+        fp.sexShow sexShow,
+        ftp.doctorName,
+        ftp.doctorUserId,
+        ftp.isBinding,
+        ftp.isPlan,
+        ftp.teamId,
+        fp.avatar,
+        (select TIMESTAMPDIFF(YEAR,DATE_FORMAT(fp.birthday,'%Y-%m-%d'), CURDATE()) from t_followup_patient fp2 where fp.isDeleted = 0 and fp.id = fp2.id) age,
+        (select fpc2.admissionNumber from t_followup_patient_cases fpc2 where fpc2.isDeleted = 0 and fpc2.patientId = fp.id ORDER BY fpc2.createTime DESC LIMIT 1) admissionNumber,
+        ftp.createTime
+        FROM
+        `t_followup_team_patient` ftp
+        LEFT JOIN t_followup_patient fp ON ftp.patientId = fp.id
+        WHERE
+        ftp.isDeleted = 0 and fp.isDeleted = 0 and fp.phone &lt;&gt; ""
+        <if test="params.teamId!=null and params.teamId!=''">
+            AND	ftp.teamId = #{params.teamId}
+        </if>
+        <if test="params.name!=null and params.name!=''">
+            AND fp.`name` like CONCAT('%',#{params.name},'%')
+        </if>
+        <if test="params.doctorUserId!=null and params.doctorUserId!=''">
+            AND	ftp.doctorUserId = #{params.doctorUserId}
+        </if>
+        order by ftp.createTime desc
+    </select>
+
+    <select id="getTeamPatient" resultType="com.hutu.modules.common.entity.TeamPatient">
+        SELECT * FROM `t_followup_team_patient`
+        where isDeleted = 0
+        <if test="teamPatient.id!=null">
+            and id = #{teamPatient.id}
+        </if>
+        <if test="teamPatient.teamId!=null">
+            and teamId = #{teamPatient.teamId}
+        </if>
+        <if test="teamPatient.patientId!=null">
+            and patientId = #{teamPatient.patientId}
+        </if>
+        <if test="teamPatient.patientName!=null and teamPatient.patientName!=''">
+            and patientName like concat('%',#{teamPatient.patientName},'%')
+        </if>
+        <if test="teamPatient.doctorUserId!=null">
+            and doctorUserId = #{teamPatient.doctorUserId}
+        </if>
+        <if test="teamPatient.isBinding!=null">
+            and isBinding = #{teamPatient.isBinding}
+        </if>
+        <if test="teamPatient.isPlan!=null">
+            and isPlan = #{teamPatient.isPlan}
+        </if>
+    </select>
+</mapper>

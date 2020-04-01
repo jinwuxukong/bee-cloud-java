@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hutu.modules.app.wx.mapper.WxPatientMapper">
+    <select id="getPatientFollowupRecord" resultType="com.hutu.modules.app.wx.vo.WxPatientFollowupRecordVo">
+        SELECT
+        a.`name`,
+        a.`status`,
+        a.updateTime,
+        a.id,
+        b.type,
+        b.typeShow,
+        b.formType,
+        b.formTypeShow
+        FROM
+        t_followup_plan_node_item a LEFT JOIN
+        t_form_template b ON a.templateId = b.id and b.isDeleted = 0
+        <where>
+            a.isDeleted = 0
+            AND a.patientId = #{patientId}
+            AND a.status = #{status}
+            <if test="keyWord!=null and keyWord!=''">
+                AND b.`name` LIKE CONCAT('%',#{keyWord},'%')
+            </if>
+        </where>
+        ORDER BY
+        a.updateTime DESC
+    </select>
+</mapper>

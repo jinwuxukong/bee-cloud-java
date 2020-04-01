@@ -1,0 +1,22 @@
+package ${package.Mapper};
+
+import com.hutu.modules.common.entity.${entity};
+import ${superMapperClassPackage};
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+
+/**
+ * <p>
+  * $!{table.comment} Mapper 接口
+ * </p>
+ *
+ * @author ${author}
+ * @since ${date}
+ */
+@Mapper
+public interface ${table.mapperName} extends ${superMapperClass}<${entity}> {
+
+    List<${entity}> getList(@Param("date")${entity} date);
+}

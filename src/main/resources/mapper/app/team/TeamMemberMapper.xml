@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hutu.modules.app.team.mapper.TeamMemberMapper">
+
+	<select id="getPage" resultType="com.hutu.modules.app.team.entity.TeamMemberVo">
+		SELECT
+		ftm.id,
+		uu.avatar,
+		ftm.teamId,
+		ftm.userId,
+		ftm.`name`,
+		ftm.jobType,
+		ftm.type,
+		ftm.typeShow,
+		ftm.verifyStatus,
+		fd.doctorHospital,
+		fd.doctorHospitalLevel,
+		fd.department,
+		uu.sex sex,
+		uu.sexShow sexShow
+		FROM
+		`t_followup_team_member` ftm
+		LEFT JOIN t_upms_user uu ON ftm.userId = uu.id
+		LEFT JOIN t_followup_doctor fd ON uu.id = fd.userId
+		LEFT JOIN t_followup_team ft ON ftm.teamId = ft.id
+		WHERE
+		ftm.isDeleted = 0
+		AND uu.isDeleted = 0
+		AND ft.isDeleted = 0
+		<if test="params.teamId!=null and params.teamId!=''">
+			AND	ftm.teamId = #{params.teamId}
+		</if>
+		<if test="params.name!=null and params.name!=''">
+			AND	ftm.name like CONCAT('%',#{params.name},'%')
+		</if>
+		<if test="params.verifyStatus!=null and params.verifyStatus!=''">
+			AND	ftm.verifyStatus in
+			<foreach collection="params.verifyStatus.split(',')" item="item" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+		<if test="params.verifyStatus==null and params.verifyStatus==''">
+			AND	ftm.type &lt;&gt; 3
+		</if>
+		order by
+		<if test="params.verifyStatus!=1">
+			ftm.verifyStatus and
+		</if>
+		ftm.type desc
+	</select>
+
+	<select id="getList" resultType="com.hutu.modules.common.entity.TeamMember">
+		SELECT
+		id
+		,teamId
+		,userId
+		,name
+		,department
+		,jobType
+		,type
+		,typeShow
+		,verifyId
+		,verifyName
+		,verifyTime
+		,verifyStatus
+		,createName
+		,createId
+		,createTime
+		,updateName
+		,updateId
+		,updateTime
+		,isDeleted
+		FROM
+		t_followup_team_member
+		WHERE isDeleted = 0
+		<if test="date.id!=null">
+			and id = #{date.id}
+		</if>
+		<if test="date.teamId!=null">
+			and teamId = #{date.teamId}
+		</if>
+		<if test="date.userId!=null">
+			and userId = #{date.userId}
+		</if>
+		<if test="date.name!=null and date.name!=''">
+			and name like CONCAT('%',#{date.name},'%')
+		</if>
+		<if test="date.department!=null and date.department!=''">
+			and department like CONCAT('%',#{date.department},'%')
+		</if>
+		<if test="date.jobType!=null and date.jobType!=''">
+			and jobType like CONCAT('%',#{date.jobType},'%')
+		</if>
+		<if test="date.type!=null">
+			and type = #{date.type}
+		</if>
+		<if test="date.typeShow!=null and date.typeShow!=''">
+			and typeShow like CONCAT('%',#{date.typeShow},'%')
+		</if>
+		<if test="date.verifyId!=null">
+			and verifyId = #{date.verifyId}
+		</if>
+		<if test="date.verifyName!=null and date.verifyName!=''">
+			and verifyName like CONCAT('%',#{date.verifyName},'%')
+		</if>
+		<if test="date.verifyStatus!=null">
+			and verifyStatus = #{date.verifyStatus}
+		</if>
+		<if test="date.createName!=null and date.createName!=''">
+			and createName like CONCAT('%',#{date.createName},'%')
+		</if>
+		<if test="date.createId!=null">
+			and createId = #{date.createId}
+		</if>
+		<if test="date.updateName!=null and date.updateName!=''">
+			and updateName like CONCAT('%',#{date.updateName},'%')
+		</if>
+		<if test="date.updateId!=null">
+			and updateId = #{date.updateId}
+		</if>
+		<if test="date.isDeleted!=null">
+			and isDeleted = #{date.isDeleted}
+		</if>
+	</select>
+
+	<select id="getOne" resultType="com.hutu.modules.app.team.entity.TeamMemberVo">
+		SELECT
+		ftm.*,
+		ft.hospital doctorHospital,
+		ft.hospitalLevel doctorHospitalLevel
+		FROM
+		`t_followup_team_member` ftm
+		LEFT JOIN t_followup_team ft ON ftm.teamId = ft.id
+		WHERE ftm.isDeleted = 0 and ft.isDeleted = 0
+		<if test="date.id!=null">
+			and id = #{date.id}
+		</if>
+		<if test="date.teamId!=null">
+			and teamId = #{date.teamId}
+		</if>
+		<if test="date.userId!=null">
+			and userId = #{date.userId}
+		</if>
+		<if test="date.name!=null and date.name!=''">
+			and name like CONCAT('%',#{date.name},'%')
+		</if>
+		<if test="date.department!=null and date.department!=''">
+			and department like CONCAT('%',#{date.department},'%')
+		</if>
+		<if test="date.jobType!=null and date.jobType!=''">
+			and jobType like CONCAT('%',#{date.jobType},'%')
+		</if>
+		<if test="date.type!=null">
+			and type = #{date.type}
+		</if>
+		<if test="date.typeShow!=null and date.typeShow!=''">
+			and typeShow like CONCAT('%',#{date.typeShow},'%')
+		</if>
+		<if test="date.verifyId!=null">
+			and verifyId = #{date.verifyId}
+		</if>
+		<if test="date.verifyName!=null and date.verifyName!=''">
+			and verifyName like CONCAT('%',#{date.verifyName},'%')
+		</if>
+		<if test="date.verifyStatus!=null">
+			and verifyStatus = #{date.verifyStatus}
+		</if>
+		<if test="date.createName!=null and date.createName!=''">
+			and createName like CONCAT('%',#{date.createName},'%')
+		</if>
+		<if test="date.createId!=null">
+			and createId = #{date.createId}
+		</if>
+		<if test="date.updateName!=null and date.updateName!=''">
+			and updateName like CONCAT('%',#{date.updateName},'%')
+		</if>
+		<if test="date.updateId!=null">
+			and updateId = #{date.updateId}
+		</if>
+		<if test="date.isDeleted!=null">
+			and isDeleted = #{date.isDeleted}
+		</if>
+	</select>
+</mapper>

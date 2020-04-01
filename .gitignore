@@ -1,0 +1,10 @@
+/target/
+logs
+codeGen
+!.mvn/wrapper/maven-wrapper.jar
+/src/test/
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr

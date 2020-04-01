@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hutu.modules.admin.followup.mapper.AdminSolutionMapper">
+
+    <select id="getVersion" resultType="int">
+        SELECT
+            count(*)
+        FROM
+            `t_followup_solution`
+        WHERE
+            isDeleted = 0
+        AND solutionNumber = #{solutionNumber}
+    </select>
+
+    <select id="getPage" resultType="com.hutu.modules.common.entity.Solution">
+        SELECT
+        tfs.*
+        FROM
+        t_followup_solution tfs
+        <where> not exists (
+        select 1 from t_followup_solution as tfs2
+        where tfs2.solutionNumber=tfs.solutionNumber and tfs.version &lt; tfs2.version )
+        and tfs.isDeleted = 0
+        <if test="params.name!=null and params.name!=''">
+            and tfs.name like CONCAT('%',#{params.name},'%') or tfs.createName like CONCAT('%',#{params.name},'%')
+        </if>
+        <if test="params.status!=null">
+            and tfs.status = #{params.status}
+        </if>
+        <if test="params.department!=null">
+            and tfs.department = #{params.department}
+        </if>
+        <if test="params.verifyStatus!=null">
+            and tfs.verifyStatus = #{params.verifyStatus}
+        </if>
+            ORDER BY tfs.createTime desc
+        </where>
+    </select>
+
+    <select id="getVersionList" resultType="com.hutu.modules.common.entity.Solution">
+        SELECT
+        tfs.*
+        FROM
+        t_followup_solution tfs
+        where tfs.isDeleted = 0
+        <if test="id!=null">
+            and tfs.id != #{id}
+        </if>
+        <if test="solutionNumber!=null">
+            and tfs.solutionNumber = #{solutionNumber}
+        </if>
+    </select>
+
+    <select id="getList" resultType="com.hutu.modules.common.entity.Solution">
+        SELECT
+        id
+        ,name
+        ,department
+        ,departmentShow
+        ,operation
+        ,operationShow
+        ,type
+        ,typeShow
+        ,scope
+        ,scopeShow
+        ,introduce
+        ,status
+        ,verifyId
+        ,verifyName
+        ,verifyTime
+        ,verifyStatus
+        ,solutionNumber
+        ,autherId
+        ,autherName
+        ,currentOwnerId
+        ,currentOwnerName
+        ,visitNum
+        ,predictDay
+        ,version
+        ,createId
+        ,createName
+        ,createTime
+        ,updateTime
+        ,updateName
+        ,updateId
+        ,isDeleted
+        FROM
+        t_followup_solution
+        WHERE isDeleted = 0
+        <if test="date.id!=null">
+            and id = #{date.id}
+        </if>
+        <if test="date.name!=null and date.name!=''">
+            and name like CONCAT('%',#{date.name},'%')
+        </if>
+        <if test="date.department!=null">
+            and department = #{date.department}
+        </if>
+        <if test="date.departmentShow!=null and date.departmentShow!=''">
+            and departmentShow like CONCAT('%',#{date.departmentShow},'%')
+        </if>
+        <if test="date.operation!=null">
+            and operation = #{date.operation}
+        </if>
+        <if test="date.operationShow!=null and date.operationShow!=''">
+            and operationShow like CONCAT('%',#{date.operationShow},'%')
+        </if>
+        <if test="date.type!=null">
+            and type = #{date.type}
+        </if>
+        <if test="date.typeShow!=null and date.typeShow!=''">
+            and typeShow like CONCAT('%',#{date.typeShow},'%')
+        </if>
+        <if test="date.scope!=null">
+            and scope = #{date.scope}
+        </if>
+        <if test="date.scopeShow!=null and date.scopeShow!=''">
+            and scopeShow like CONCAT('%',#{date.scopeShow},'%')
+        </if>
+        <if test="date.introduce!=null and date.introduce!=''">
+            and introduce like CONCAT('%',#{date.introduce},'%')
+        </if>
+        <if test="date.status!=null">
+            and status = #{date.status}
+        </if>
+        <if test="date.verifyId!=null">
+            and verifyId = #{date.verifyId}
+        </if>
+        <if test="date.verifyName!=null and date.verifyName!=''">
+            and verifyName like CONCAT('%',#{date.verifyName},'%')
+        </if>
+        <if test="date.verifyStatus!=null">
+            and verifyStatus = #{date.verifyStatus}
+        </if>
+        <if test="date.solutionNumber!=null and date.solutionNumber!=''">
+            and solutionNumber like CONCAT('%',#{date.solutionNumber},'%')
+        </if>
+        <if test="date.autherId!=null">
+            and autherId = #{date.autherId}
+        </if>
+        <if test="date.autherName!=null and date.autherName!=''">
+            and autherName like CONCAT('%',#{date.autherName},'%')
+        </if>
+        <if test="date.currentOwnerId!=null">
+            and currentOwnerId = #{date.currentOwnerId}
+        </if>
+        <if test="date.currentOwnerName!=null and date.currentOwnerName!=''">
+            and currentOwnerName like CONCAT('%',#{date.currentOwnerName},'%')
+        </if>
+        <if test="date.visitNum!=null">
+            and visitNum = #{date.visitNum}
+        </if>
+        <if test="date.predictDay!=null">
+            and predictDay = #{date.predictDay}
+        </if>
+        <if test="date.version!=null">
+            and version = #{date.version}
+        </if>
+        <if test="date.createId!=null">
+            and createId = #{date.createId}
+        </if>
+        <if test="date.createName!=null and date.createName!=''">
+            and createName like CONCAT('%',#{date.createName},'%')
+        </if>
+        <if test="date.updateName!=null and date.updateName!=''">
+            and updateName like CONCAT('%',#{date.updateName},'%')
+        </if>
+        <if test="date.updateId!=null">
+            and updateId = #{date.updateId}
+        </if>
+        <if test="date.isDeleted!=null">
+            and isDeleted = #{date.isDeleted}
+        </if>
+    </select>
+</mapper>

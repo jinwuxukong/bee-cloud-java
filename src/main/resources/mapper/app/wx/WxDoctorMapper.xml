@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hutu.modules.app.wx.mapper.WxDoctorMapper">
+    <select id="getDoctorInfoByUserId" resultType="com.hutu.modules.app.wx.vo.WxDoctorInfoVo">
+        SELECT
+            a.id,
+            a.birthday,
+            a.nick doctorName,
+            a.avatar,
+            a.phone,
+            a.sex,
+            a.sexShow,
+            b.doctorTeamId,
+            b.doctorTeam,
+            b.professionUrl,
+            b.doctorHospital,
+            b.professionCallType,
+            b.professionCallShow,
+            b.yimiNumber,
+            b.verifyStatus,
+            b.verifyId,
+            b.verifyName,
+            b.authUrl1,
+            b.authUrl2,
+            b.idCardUrl1,
+            b.idCardUrl2,
+            b.jobUrl,
+            b.sex,
+            b.sexShow,
+            b.phone,
+            b.department,
+            b.introduction,
+            b.operation,
+            b.icd10,
+            b.disease,
+            b.honorCertificates
+            FROM
+            t_upms_user a LEFT JOIN t_followup_doctor b ON a.id= b.userId
+            WHERE
+            a.id = #{id}
+    </select>
+</mapper>

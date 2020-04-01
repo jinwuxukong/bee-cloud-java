@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hutu.modules.admin.followup.mapper.AdminDoctorMapper">
+
+    <select id="getPage" resultType="com.hutu.modules.admin.followup.vo.DoctorVo">
+        SELECT
+        uu.id,
+        uu.phone,
+        uu.nick,
+        uu.avatar,
+        uu.createTime,
+        fd.verifyStatus,
+        fd.doctorHospital,
+        fd.famousDoctor,
+        fd.professionCallType,
+        fd.professionCallShow
+        FROM
+        `t_upms_user` uu
+        LEFT JOIN t_followup_doctor fd ON uu.id = fd.userId
+        WHERE
+        uu.isDeleted = 0
+        <if test="params.verifyStatus!=null">
+            and fd.verifyStatus = #{params.verifyStatus}
+        </if>
+        <if test="params.nick!=null and params.nick!=''">
+            and uu.nick like CONCAT('%',#{params.nick},'%')
+        </if>
+        <if test="params.phone!=null and params.phone!=''">
+            or uu.phone like CONCAT('%',#{params.phone},'%')
+        </if>
+        <if test="params.doctorHospital!=null and params.doctorHospital!=''">
+            or fd.doctorHospital like CONCAT('%',#{params.doctorHospital},'%')
+        </if>
+        and uu.type in (3,4)
+    </select>
+</mapper>

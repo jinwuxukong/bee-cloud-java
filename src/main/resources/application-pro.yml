@@ -1,0 +1,72 @@
+# 附件上传路径配置
+web:
+  #  upload-path: /users/liangao/yimiupload/
+  upload-path: /root/gyl/upload/
+  url-path: http://api.hnasa.cn/
+# DataSource Config
+spring:
+  #数据源配置
+  datasource:
+    url: jdbc:mysql://120.78.209.93:3306/followup?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false
+    username: root
+    password: qwert123!@#
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+  resources:
+    static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/,file:${web.upload-path}
+#swagger配置参考： https://github.com/SpringForAll/spring-boot-starter-swagger
+swagger:
+  enabled: false
+#  enabled: true
+  title: 管理系统api文档
+  authorization:
+    key-name: token
+  version: 1.0.0
+  base-package: com.hutu.modules
+  base-path: /**
+  exclude-path: /error, /ops/**
+# 日志
+logging:
+  #  生成日志文件名称
+  file: ${spring.application.name}
+  #  日志文件输出目录，没有会自动生成目录
+  path: ./logs
+
+# 缓存设置
+jetcache:
+  statIntervalMinutes: 0
+  areaInCacheName: false
+  local:
+    default:
+      type: linkedhashmap
+      keyConvertor: fastjson
+  remote:
+    default:
+      type: redis
+      keyConvertor: fastjson
+      valueEncoder: java
+      valueDecoder: java
+      poolConfig:
+        minIdle: 5
+        maxIdle: 20
+        maxTotal: 50
+      host: 127.0.0.1
+      port: 6379
+ws:
+  server:
+    port: 8095
+    host: localhost
+
+#捷微微信管理后台接口配置
+jeewx:
+  domain: http://api.hnasa.cn/wechat   #域名
+#  domain: http://zyzjeewx.utools.club/wechat   #域名
+  public: http://yunfeng_medical_chain.gitee.io/patient_form/#/userForm   #码云地址
+  qrcode:   #二维码
+    create: ${jeewx.domain}/followup/createQrcode/
+    expiredTime: 1000 #过期时间
+  followUp:
+    template:
+      send: ${jeewx.domain}/followup/template/send  #发送随访表单的接口
+      goUrl: ${jeewx.public}      #模板要跳转的地址
+      templateId1: QwrkekuflO97jFPcpFVHBY3OYtXfMyuf9FSR6LqnQbY #模板1的id
